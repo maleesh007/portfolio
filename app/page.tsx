@@ -1,9 +1,10 @@
+import Hero from "@/components/Hero";
+import { projects } from "@/data/projects";
+
 export default function Home() {
   return (
-    // <>...</> groups elements without adding an extra box to the page.
     <>
       <header className="wrap site-header">
-        {/* aria-label tells screen readers what an icon-only link does */}
         <a href="#top" className="mark" aria-label="Back to top">
           M
         </a>
@@ -15,23 +16,20 @@ export default function Home() {
       </header>
 
       <main id="top" className="wrap">
-        <section aria-label="Introduction">
-          <p className="mono">MALEESHA BASNAYAKE · MELBOURNE</p>
-          {/* Inline style is fine for one-off tweaks; it's replaced in step 3 */}
-          <h1 style={{ fontSize: "clamp(2.2rem, 6vw, 3.4rem)", margin: "8px 0 0" }}>
-            Maleesha Basnayake
-          </h1>
-          <p style={{ color: "var(--ink-muted)", margin: "10px 0 0" }}>
-            Hero goes here (step 3)
-          </p>
-        </section>
+        <Hero />
 
         <section id="projects" className="section">
           <div className="section-head">
             <span className="mono">§01</span>
             <h2>Projects</h2>
           </div>
-          <p>Run table goes here (step 5)</p>
+          <ul>
+            {projects.map((p) => (
+              <li key={p.slug}>
+                {p.title} · <span className="mono">{p.headline}</span>
+              </li>
+            ))}
+          </ul>
         </section>
 
         <section id="skills" className="section">
