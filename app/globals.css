@@ -1,204 +1,195 @@
 @import "tailwindcss";
+
+/* ---------- design tokens: light mode ---------- */
+/* Every colour on the site comes from these variables.
+   Change a value here and it updates everywhere. */
 :root {
-  --bg: #f5f6f1;          
-  --ink: #1b2430;         
-  --ink-muted: #5b6472;   
-  --line: #d9dbd3;        
-  --accent: #2f6f63;      
-  --accent-soft: #e4eeea; 
-  --accent-warm: #b97a2e; 
-  --focus: #2f6f63;       
+  --bg: #f5f6f1;          /* page background (off-white paper) */
+  --surface: #ffffff;     /* cards, hover card */
+  --ink: #1b2430;         /* main text */
+  --ink-muted: #5b6472;   /* secondary text */
+  --line: #d9dbd3;        /* hairline dividers */
+  --dot: #c3c7bc;         /* faint background dots in the hero */
+
+  --accent: #2f6f63;      /* teal: main projects, links, highlights */
+  --accent-soft: #e4eeea; /* pale teal for badges */
+  --warm: #b97a2e;        /* amber: secondary projects */
+  --warm-ink: #8a6020;    /* amber text that's dark enough to read */
+  --warm-soft: #f6ecdd;   /* pale amber for badges */
+
+  /* Font stacks. The --font-grotesk etc. variables come from layout.tsx. */
+  --font-head: var(--font-grotesk), "Helvetica Neue", Arial, sans-serif;
+  --font-body: var(--font-plex-sans), -apple-system, "Segoe UI", sans-serif;
+  --font-mono: var(--font-plex-mono), ui-monospace, Consolas, monospace;
+
+  --max: 960px;   /* widest the content column gets */
+  --gutter: 24px; /* side padding, keeps text off the screen edge */
 }
 
+/* ---------- dark mode: follows the visitor's device ---------- */
+/* ":not([data-theme="light"])" lets a manual "light" choice win later. */
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not([data-theme="light"]) {
     --bg: #12171a;
+    --surface: #1a2023;
     --ink: #eceee9;
     --ink-muted: #9ba5a2;
     --line: #2b3336;
+    --dot: #3a4346;
     --accent: #5cb3a0;
     --accent-soft: #1e2c29;
-    --accent-warm: #dda35c;
-    --focus: #5cb3a0;
+    --warm: #dda35c;
+    --warm-ink: #dda35c;
+    --warm-soft: #2e2618;
   }
 }
 
-* { box-sizing: border-box; }
+/* Manual override, used in step 9 by the theme switch. */
+:root[data-theme="dark"] {
+  --bg: #12171a;
+  --surface: #1a2023;
+  --ink: #eceee9;
+  --ink-muted: #9ba5a2;
+  --line: #2b3336;
+  --dot: #3a4346;
+  --accent: #5cb3a0;
+  --accent-soft: #1e2c29;
+  --warm: #dda35c;
+  --warm-ink: #dda35c;
+  --warm-soft: #2e2618;
+}
 
+/* ---------- base ---------- */
 html {
-  scroll-padding-top: env(safe-area-inset-top, 0px); 
-  scroll-behavior: smooth;
+  scroll-behavior: smooth; /* nav links glide to sections */
 }
 
 body {
   margin: 0;
   background: var(--bg);
   color: var(--ink);
-  font-family: var(--font-plex-sans), -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-family: var(--font-body);
   font-size: 16px;
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
-  padding-top: env(safe-area-inset-top, 0px);
-  padding-bottom: env(safe-area-inset-bottom, 0px);
 }
 
-a { color: inherit; }
-a:focus-visible,
-button:focus-visible { outline: 2px solid var(--focus); outline-offset: 3px; }
-
-.wrap {
-  max-width: 760px;
-  margin: 0 auto;
-  padding: clamp(28px, 6vw, 64px) 24px 96px;
-}
-
-h1, h2, h3 {
-  font-family: var(--font-grotesk), "Helvetica Neue", Arial, sans-serif;
-  font-weight: 600;
+h1,
+h2,
+h3 {
+  font-family: var(--font-head);
+  font-weight: 500;
   line-height: 1.15;
-  margin: 0;
+  letter-spacing: -0.01em;
 }
 
-.mono { font-family: var(--font-plex-mono), "SFMono-Regular", Consolas, monospace; }
-
-
-header.site {
-  display: flex;                
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: 16px;
-  margin-bottom: clamp(48px, 8vw, 88px);
+a {
+  color: inherit;
 }
 
-.mark {
-  width: 40px; height: 40px;
-  border: 1.5px solid var(--ink);
-  border-radius: 50%;           
-  display: flex; align-items: center; justify-content: center; 
-  font-family: var(--font-grotesk), sans-serif;
-  font-weight: 600;
-  font-size: 1.1rem;
-  flex-shrink: 0;
+/* Visible outline when someone navigates with the keyboard (Tab key). */
+a:focus-visible,
+button:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 2px;
 }
 
-nav.contact-links {
-  display: flex;
-  gap: 20px;
-  font-family: var(--font-plex-mono), monospace;
-  font-size: 0.8125rem;
-  padding-top: 8px;
-}
-nav.contact-links a { text-decoration: none; color: var(--ink-muted); border-bottom: 1px solid transparent; }
-nav.contact-links a:hover { color: var(--ink); border-bottom-color: var(--ink); }
-
-/* ---------- hero ---------- */
-.hero h1 { font-size: clamp(2.25rem, 6vw, 3.4rem); letter-spacing: -0.01em; }
-.hero .role { margin: 10px 0 0; color: var(--ink-muted); font-size: 1rem; }
-.hero .statement { margin: 28px 0 0; max-width: 62ch; font-size: 1.15rem; line-height: 1.55; }
-.hero .statement strong { color: var(--accent); font-weight: 500; }
-
-/* ---------- the animated dots ---------- */
-.signal { display: block; margin: 40px 0 0; width: 100%; max-width: 420px; height: auto; }
-.signal circle { fill: var(--accent-warm); }
-.signal .node-main { fill: var(--accent); }
-.signal line { stroke: var(--line); stroke-width: 1.25; }
-
-.signal path.draw {
-  fill: none;
-  stroke: var(--accent);
-  stroke-width: 1.25;
-  stroke-dasharray: 340;
-  stroke-dashoffset: 340;
-  animation: draw-in 1.4s ease-out 0.2s forwards; 
-}
-.signal circle.pop {
-  opacity: 0;
-  transform-origin: center;
-  transform: scale(0.4);
-  animation: pop-in 0.5s ease-out forwards;
-}
-@keyframes draw-in { to { stroke-dashoffset: 0; } }
-@keyframes pop-in  { to { opacity: 1; transform: scale(1); } }
-
-@media (prefers-reduced-motion: reduce) {
-  .signal path.draw { animation: none; stroke-dashoffset: 0; }
-  .signal circle.pop { animation: none; opacity: 1; transform: scale(1); }
+::selection {
+  background: var(--accent-soft); /* highlighted text uses the theme */
 }
 
+/* ---------- layout helpers (reused across the site) ---------- */
+.wrap {
+  max-width: var(--max);
+  margin: 0 auto;            /* centres the column */
+  padding: 0 var(--gutter);
+}
 
-section { margin-top: clamp(56px, 9vw, 96px); }
+/* Small monospace labels, e.g. "§01" and the location line. */
+.mono {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.04em;
+  color: var(--ink-muted);
+}
 
+/* clamp(min, preferred, max): spacing grows with screen size, within limits. */
+.section {
+  padding: clamp(56px, 9vw, 96px) 0 0;
+}
+
+/* Section titles: "§01  Projects" with a line underneath. */
 .section-head {
   display: flex;
   align-items: baseline;
-  justify-content: space-between;
+  gap: 12px;
   border-bottom: 1px solid var(--line);
   padding-bottom: 12px;
   margin-bottom: 8px;
 }
-.section-head h2 { font-size: 1.3rem; }
-.section-head .count { color: var(--ink-muted); font-size: 0.8125rem; }
 
-
-.project {
-  display: grid;
-  grid-template-columns: 150px 1fr;
-  gap: 24px;
-  padding: 28px 0;
-  border-bottom: 1px solid var(--line);
-}
-.project:last-child { border-bottom: none; }
-
-.project .meta { color: var(--ink-muted); font-size: 0.78rem; line-height: 1.6; padding-top: 4px; }
-.project .meta .badge {
-  display: inline-block;
-  margin-top: 8px;
-  padding: 3px 8px;
-  background: var(--accent-soft);
-  color: var(--accent);
-  border-radius: 3px;
-  font-size: 0.72rem;
-}
-.project h3 { font-size: 1.2rem; margin-bottom: 10px; }
-.project p { margin: 0 0 14px; max-width: 60ch; color: var(--ink); }
-.project .stack { color: var(--ink-muted); font-size: 0.8rem; }
-
-@media (max-width: 620px) {
-  .project { grid-template-columns: 1fr; gap: 8px; }
-  .project .meta { padding-top: 0; order: 2; }
-  .project h3 { order: 1; }
-  .project p, .project .stack { order: 3; }
+.section-head h2 {
+  font-size: 1.3rem;
+  margin: 0;
 }
 
-.bg-item { display: flex; justify-content: space-between; gap: 16px; padding: 16px 0; border-bottom: 1px solid var(--line); }
-.bg-item:last-child { border-bottom: none; }
-.bg-item .what strong { display: block; font-weight: 500; }
-.bg-item .what span { color: var(--ink-muted); font-size: 0.9rem; }
-.bg-item .when { color: var(--ink-muted); font-size: 0.8rem; white-space: nowrap; padding-top: 3px; }
-.toolkit { margin-top: 20px; color: var(--ink-muted); font-size: 0.85rem; }
-
-.contact-cta { margin-top: 12px; display: grid; gap: 2px; }
-.contact-cta a {
+/* ---------- site header ---------- */
+.site-header {
   display: flex;
-  justify-content: space-between;
+  justify-content: space-between; /* mark on the left, nav on the right */
   align-items: center;
-  text-decoration: none;
-  padding: 18px 0;
-  border-bottom: 1px solid var(--line);
-  font-family: var(--font-grotesk), sans-serif;
-  font-size: 1.15rem;
-  font-weight: 500;
-  transition: padding-left 0.15s ease; 
+  padding-top: 20px;
+  padding-bottom: 20px;
 }
-.contact-cta a .label { color: var(--ink-muted); font-family: var(--font-plex-mono), monospace; font-size: 0.75rem; font-weight: 400; }
-.contact-cta a:hover { padding-left: 8px; color: var(--accent); }
-.contact-cta a:hover .label { color: var(--accent); }
 
-footer {
-  margin-top: 64px;
-  padding-top: 24px;
-  border-top: 1px solid var(--line);
+.site-header nav {
+  display: flex;
+  gap: 20px;
+}
+
+.site-header nav a {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
   color: var(--ink-muted);
-  font-size: 0.78rem;
-  font-family: var(--font-plex-mono), monospace;
+  text-decoration: none;
+  border-bottom: 1px solid transparent; /* invisible until hover */
+}
+
+.site-header nav a:hover {
+  color: var(--ink);
+  border-bottom-color: var(--ink);
+}
+
+/* The circled "M" in the top-left corner. */
+.mark {
+  width: 36px;
+  height: 36px;
+  border: 1.5px solid var(--ink);
+  border-radius: 50%;  /* turns the square into a circle */
+  display: grid;
+  place-items: center; /* centres the letter */
+  font-family: var(--font-head);
+  font-weight: 500;
+  text-decoration: none;
+}
+
+/* ---------- footer ---------- */
+.site-footer {
+  margin-top: 96px;
+  padding: 24px 0 40px;
+  border-top: 1px solid var(--line);
+}
+
+/* ---------- accessibility ---------- */
+/* If someone has turned off animations in their device settings,
+   switch off all animation and smooth scrolling. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
