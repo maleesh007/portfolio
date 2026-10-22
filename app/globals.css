@@ -175,9 +175,16 @@ button:focus-visible {
 }
 
 /* ---------- footer ---------- */
+/* Only set top/bottom spacing here, so .wrap's side padding still applies. */
 .site-footer {
   margin-top: 96px;
-  padding: 24px 0 40px;
+  padding-bottom: 40px;
+}
+
+/* The line sits on the text itself, so it matches the width of the section lines. */
+.site-footer p {
+  margin: 0;
+  padding-top: 24px;
   border-top: 1px solid var(--line);
 }
 
